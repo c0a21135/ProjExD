@@ -1,2 +1,1 @@
 print("hHello world")
-print("")
