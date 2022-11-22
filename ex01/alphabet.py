@@ -4,6 +4,7 @@ word_num = random.randint(8,15)
 del_word_num = random.randint(2, 5)
 
 
+
 def shutudai(word_list):
     taisyou = []
     kesson = []
