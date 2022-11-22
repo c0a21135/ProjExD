@@ -1,5 +1,5 @@
 import random
-import datetime
+import time
 word_num = random.randint(8,15)
 del_word_num = random.randint(2, 5)
 
@@ -50,7 +50,7 @@ if __name__ == "__main__":
     for i in range(26):
         word_list.append(chr(65+i))
 
-    start_time = datetime.datetime.now()
+    start_time = time.time()
     shutudai(word_list)
-    end_time = datetime.datetime.now()
-    print(f"所要時間：{(start_time-end_time).seconds}")
+    end_time = time.time()
+    print(f"所要時間：{(end_time-start_time)}")
