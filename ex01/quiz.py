@@ -1,5 +1,5 @@
 from random import choice
-
+import time
 
 def shutudai():
     que_dict = {}
@@ -14,8 +14,11 @@ if __name__ == "__main__":
     question, f_ans = shutudai()
     print("問題：")
     print(question)
+    start_time = time.time()
     ans = input("答えるんだ：")
+    end_time = time.time() - start_time
     if ans in f_ans:
         print("正解！！！")
     else:
         print("出直してこい")
+    print(f"所要時間：{end_time}")
