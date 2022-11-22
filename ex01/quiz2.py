@@ -19,10 +19,10 @@ def shutudai(word_list):
     print("対象文字：")
     for moji in taisyou:
         print(moji, end=" ")
-    print()
-    print("欠損文字：")
-    for moji in kesson:
-        print(moji, end=" ")
+    # print()
+    # print("欠損文字：")
+    # for moji in kesson:
+    #     print(moji, end=" ")
     print()
     print("表示文字：")
     for moji in hyouji:
