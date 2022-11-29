@@ -4,15 +4,15 @@ import tkinter.messagebox as tkm
 def change_mode(text): #進数表記を変更する
     global mode
     mode = text
-    
+
 
 def button_click(event):
     global ch_ope
     btn = event.widget
     txt = btn["text"]
-    if not str(txt) in operators: #数字の入力受付
+    if not str(txt) in operators: #数字の入力を受け付ける
             ch_ope = False
-
+            
     if mode == "DEC": #10進数の計算
         if txt == "=":
             siki = entry.get()
@@ -39,6 +39,7 @@ def button_click(event):
                 entry.insert(tk.END, txt)
                 if str(txt) in operators: #記号が入力されていたら
                     ch_ope = True 
+
     if mode == "BIN": #2進数の計算
         if txt == "=":
             siki = entry.get()
@@ -51,11 +52,8 @@ def button_click(event):
                 res += int(si, 2) #10進数に変換し演算
             entry.delete(0, tk.END)
             entry.insert(tk.END, bin(int(res))[2:])
-            
-            
         elif txt == "C":
             entry.delete(0, tk.END)
-
         elif txt == "BIN":
             change_mode(txt)
         elif txt == "DEC":
