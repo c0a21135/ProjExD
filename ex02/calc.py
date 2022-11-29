@@ -10,9 +10,13 @@ def button_click(event):
     txt = btn["text"]
     tkm.showinfo(txt, f"[{txt}]ボタンがクリックされました")
 
+entry = tk.Entry(root, justify="right", width=10, font=("",40))
+entry.grid(row = 0, column = 0, columnspan=3)
+
 for i in range(9, -1, -1):
     button = tk.Button(root, text=9-i, font=("", 30), width=4, height=2)
     button.bind("<ButtonRelease>", button_click)
-    button.grid(row = (i//3), column = (i%3))
+    button.grid(row = (i//3)+1, column = (i%3))
 
 root.mainloop()
+
