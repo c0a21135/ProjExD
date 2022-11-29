@@ -4,7 +4,7 @@ import tkinter.messagebox as tkm
 def change_mode(text): #進数表記を変更する
     global mode
     mode = text
-
+    
 
 def button_click(event):
     global ch_ope
@@ -75,7 +75,19 @@ def button_click(event):
             if ch_ope == False: #前に演算子が入力されていない時
                 entry.insert(tk.END, txt)
                 if str(txt) in operators: #記号が入力されていたら
-                    ch_ope = True 
+                    ch_ope = True
+
+# ボタン生成の関数
+def mk_button(key, r, c):
+    for i in key:
+        button = tk.Button(root, text=i, font=("", 30), width=4, height=2)
+        button.bind("<ButtonRelease>", button_click)
+        button.grid(row = r, column = c)
+        c += 1
+        if c%3 == 0:
+            r += 1
+            c = 0
+    return r, c
 
 
 if __name__ == "__main__":
@@ -91,24 +103,8 @@ if __name__ == "__main__":
 
     #ボタンの実装
     r, c = 1, 0
-    for i in range(9, -1, -1):
-        button = tk.Button(root, text=i, font=("", 30), width=4, height=2)
-        button.bind("<ButtonRelease>", button_click)
-        button.grid(row = r, column = c)
-        c += 1
-        if c%3 == 0:
-            r += 1
-            c = 0
-
-    for ope in operators:
-        button = tk.Button(root, text=ope, font=("", 30), width=4, height=2)
-        button.bind("<ButtonRelease>", button_click)
-        button.grid(row=r, column=c)
-        c += 1
-        if c%3 == 0:
-            r += 1
-            c = 0
-
+    r, c = mk_button(range(9, -1, -1), r, c)
+    r, c = mk_button(operators, r, c)
 
     root.mainloop()
 
