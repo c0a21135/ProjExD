@@ -1,14 +1,6 @@
 import tkinter as tk
 import tkinter.messagebox as tkm
 
-root = tk.Tk()
-root.title("tk")
-root.geometry("280x750")
-
-mode = "DEC" #n進数判定
-ch_ope = False #数字以外の入力識別
-operators = ["+", "-","*", "/", "C", "=", "DEC","BIN"]
-
 def change_mode(text): #進数表記を変更する
     global mode
     mode = text
@@ -86,30 +78,37 @@ def button_click(event):
                     ch_ope = True 
 
 
-entry = tk.Entry(root, justify="right", width=10, font=("",40))
-entry.grid(columnspan=3)
+if __name__ == "__main__":
+    mode = "DEC" #n進数判定
+    ch_ope = False #数字以外の入力識別
+    operators = ["+", "-","*", "/", "C", "=", "DEC","BIN"]
+
+    root = tk.Tk()
+    root.title("tk")
+    root.geometry("280x750")
+    entry = tk.Entry(root, justify="right", width=10, font=("",40))
+    entry.grid(columnspan=3)
+
+    #ボタンの実装
+    r, c = 1, 0
+    for i in range(9, -1, -1):
+        button = tk.Button(root, text=i, font=("", 30), width=4, height=2)
+        button.bind("<ButtonRelease>", button_click)
+        button.grid(row = r, column = c)
+        c += 1
+        if c%3 == 0:
+            r += 1
+            c = 0
+
+    for ope in operators:
+        button = tk.Button(root, text=ope, font=("", 30), width=4, height=2)
+        button.bind("<ButtonRelease>", button_click)
+        button.grid(row=r, column=c)
+        c += 1
+        if c%3 == 0:
+            r += 1
+            c = 0
 
 
-#ボタンの実装
-r, c = 1, 0
-for i in range(9, -1, -1):
-    button = tk.Button(root, text=i, font=("", 30), width=4, height=2)
-    button.bind("<ButtonRelease>", button_click)
-    button.grid(row = r, column = c)
-    c += 1
-    if c%3 == 0:
-        r += 1
-        c = 0
-
-for ope in operators:
-    button = tk.Button(root, text=ope, font=("", 30), width=4, height=2)
-    button.bind("<ButtonRelease>", button_click)
-    button.grid(row=r, column=c)
-    c += 1
-    if c%3 == 0:
-        r += 1
-        c = 0
-
-
-root.mainloop()
+    root.mainloop()
 
