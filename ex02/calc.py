@@ -3,7 +3,7 @@ import tkinter.messagebox as tkm
 
 root = tk.Tk()
 root.title("tk")
-root.geometry("300x500")
+root.geometry("500x1000")
 
 def button_click(event):
     btn = event.widget
@@ -17,20 +17,32 @@ def button_click(event):
         entry.insert(tk.END, res)
 
 entry = tk.Entry(root, justify="right", width=10, font=("",40))
-entry.grid(columnspan=4)
+entry.grid(columnspan=3)
 
+
+#数字ボタンの実装
+
+r, c = 4, 0
 for i in range(9, -1, -1):
-    button = tk.Button(root, text=9-i, font=("", 30), width=4, height=2)
+    button = tk.Button(root, text=i, font=("", 30), width=4, height=2)
     button.bind("<ButtonRelease>", button_click)
-    button.grid(row = (i//3)+1, column = (i%3))
+    button.grid(row = r, column = c)
+    c += 1
+    if c%3 == 0:
+        r += 1
+        c = 0
 
-r, c = 4, 1
-operators = ["+", "="]
+
+
+operators = ["+", "-","*", "/", "C", "="]
 for ope in operators:
     button = tk.Button(root, text=ope, font=("", 30), width=4, height=2)
     button.bind("<ButtonRelease>", button_click)
     button.grid(row=r, column=c)
-    c+=1
+    c += 1
+    if c%3 == 0:
+        r += 1
+        c = 0
 
 root.mainloop()
 
