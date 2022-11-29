@@ -8,8 +8,14 @@ root.geometry("280x750")
 mode = "DEC" #n進数判定
 ch_ope = False #数字以外の入力識別
 operators = ["+", "-","*", "/", "C", "=", "DEC","BIN"]
+
+def change_mode(text): #進数表記を変更する
+    global mode
+    mode = text
+
+
 def button_click(event):
-    global ch_ope, mode
+    global ch_ope
     btn = event.widget
     txt = btn["text"]
     if not str(txt) in operators: #数字の入力受付
@@ -26,7 +32,7 @@ def button_click(event):
             entry.delete(0, tk.END)
 
         elif txt == "DEC": #10進数表記にする
-            mode = txt    
+            change_mode(txt)   
 
         elif txt == "BIN": #2進数表記にする
             # 計算があれば先に計算
@@ -34,13 +40,12 @@ def button_click(event):
             res = eval(siki)
             entry.delete(0, tk.END)
             entry.insert(tk.END, bin(int(res))[2:])
-            # モード変更
-            mode = txt    
+            change_mode(txt) # モード変更
 
         else:
-            if ch_ope == False:
+            if ch_ope == False: #前に演算子が入力されていない時
                 entry.insert(tk.END, txt)
-                if str(txt) in operators: #記号の入力判定
+                if str(txt) in operators: #記号が入力されていたら
                     ch_ope = True 
     if mode == "BIN": #2進数の計算
         if txt == "=":
@@ -60,7 +65,7 @@ def button_click(event):
             entry.delete(0, tk.END)
 
         elif txt == "BIN":
-            mode = txt
+            change_mode(txt)
         elif txt == "DEC":
             siki = entry.get()
             for kugiri in  operators:
@@ -72,12 +77,12 @@ def button_click(event):
                 res += int(si, 2)
             entry.delete(0, tk.END)
             entry.insert(tk.END, res)
-            mode = txt
+            change_mode(txt)
         
         elif txt in [0, 1, "+"]: #+か0，1の時入力
-            if ch_ope == False:
+            if ch_ope == False: #前に演算子が入力されていない時
                 entry.insert(tk.END, txt)
-                if str(txt) in operators: #記号の入力判定
+                if str(txt) in operators: #記号が入力されていたら
                     ch_ope = True 
 
 
