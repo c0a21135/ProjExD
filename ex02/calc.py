@@ -18,5 +18,13 @@ for i in range(9, -1, -1):
     button.bind("<ButtonRelease>", button_click)
     button.grid(row = (i//3)+1, column = (i%3))
 
+r, c = 4, 1
+operators = ["+", "="]
+for ope in operators:
+    button = tk.Button(root, text=ope, font=("", 30), width=4, height=2)
+    button.bind("<ButtonRelease>", button_click)
+    button.grid(row=r, column=c)
+    c+=1
+
 root.mainloop()
 
