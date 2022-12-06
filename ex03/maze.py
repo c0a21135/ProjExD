@@ -13,12 +13,10 @@ def main_proc():
     global mx, my, cx, cy, image
     if game_flag == True: #ゲーム実施中のみ移動ができる
         if key == "Up":
-            #移動先が床の場合は座標の変更と画像の差し替え
-            if maze_list[mx][my-1] == 0:
+            if maze_list[mx][my-1] == 0: #移動先が床の場合は座標の変更と画像の差し替え
                 my -= 1
                 image = tk.PhotoImage(file="6.png")
-            #移動先が壁の場合は座標変更せずに画像の差し替えのみ
-            else:
+            else:                        #移動先が壁の場合は座標変更せずに画像の差し替えのみ
                 image = tk.PhotoImage(file="8.png")
 
         if key == "Down":
@@ -58,6 +56,10 @@ def ch_game_flag(event): #ゲームの進行を管理する関数
     if key == "f":
         game_flag = False
         time_count() #タイマーの停止
+    # ゲームの初期化
+    if key == "r":
+        game_flag = False
+        init()
 
 def time_count(): #時間の計測と表示
     global sec, ms, jid
@@ -71,6 +73,17 @@ def time_count(): #時間の計測と表示
         root.after_cancel(jid)
     label["text"] = f"{sec}.{ms}"
     label.pack()
+
+def init():
+    global mx, my, sec, ms, image
+    sec, ms = 0, 0
+    image = tk.PhotoImage(file="0.png")
+    mx, my = 1, 1
+    cx, cy = mx*100+50, my*100+50
+    canvas.pack()
+    mm.show_maze(canvas, maze_list)
+    canvas.create_image(cx, cy, image=image, tag="kokaton")
+    time_count()
 
 if __name__ == "__main__":
     game_flag = False
