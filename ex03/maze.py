@@ -44,20 +44,22 @@ def main_proc():
 
     cx, cy = mx*100+50, my*100+50
     canvas.create_image(cx, cy, image=image, tag="kokaton")
-    # canvas.coords("kokaton", cx, cy)
+    canvas.coords("kokaton", cx, cy)
     root.after(100, main_proc)
 
 def ch_game_flag(event): #ゲームの進行を管理する関数
     global game_flag, key
     key = event.keysym
+    # ゲームの開始
     if game_flag == False and key == "s":
         game_flag = True
         time_count() #タイマーの開始
+    # ゲームの一時停止
     if key == "f":
         game_flag = False
-        time_count()#タイマーの停止
+        time_count() #タイマーの停止
 
-def time_count():
+def time_count(): #時間の計測と表示
     global sec, ms, jid
     if game_flag == True:
         ms += 1
