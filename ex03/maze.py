@@ -10,17 +10,37 @@ def key_up(event):
     key = ""
 
 def main_proc():
-    global mx, my, cx, cy
+    global mx, my, cx, cy, image
     if key == "Up":
-        if maze_list[mx][my-1] == 0: my -= 1
+        #移動先が床の場合は座標の変更と画像の差し替え
+        if maze_list[mx][my-1] == 0:
+            my -= 1
+            image = tk.PhotoImage(file="6.png")
+        #移動先が壁の場合は座標変更せずに画像の差し替えのみ
+        else:
+            image = tk.PhotoImage(file="8.png")
+
     if key == "Down":
-        if maze_list[mx][my+1] == 0: my += 1
+        if maze_list[mx][my+1] == 0: 
+            my += 1
+            image = tk.PhotoImage(file="3.png")
+        else:
+            image = tk.PhotoImage(file="8.png")
     if key == "Left":
-        if maze_list[mx-1][my] == 0: mx -= 1
+        if maze_list[mx-1][my] == 0:
+            mx -= 1
+            image = tk.PhotoImage(file="5.png")
+        else:
+            image = tk.PhotoImage(file="8.png")
     if key == "Right":
-        if maze_list[mx+1][my] == 0: mx += 1
+        if maze_list[mx+1][my] == 0:
+            mx += 1
+            image = tk.PhotoImage(file="2.png")
+        else: 
+            image = tk.PhotoImage(file="8.png")
     cx, cy = mx*100+50, my*100+50
-    canvas.coords("kokaton", cx, cy)
+    canvas.create_image(cx, cy, image=image, tag="kokaton")
+    # canvas.coords("kokaton", cx, cy)
     root.after(100, main_proc)
 
 
@@ -29,7 +49,7 @@ if __name__ == "__main__":
     root = tk.Tk()
     root.title("迷えるこうかとん")
     canvas = tk.Canvas(width=1500, height=900, bg="black")
-    image = tk.PhotoImage(file="8.png")
+    image = tk.PhotoImage(file="0.png")
     mx, my = 1, 1
     cx, cy = mx*100+50, my*100+50
     canvas.pack()
