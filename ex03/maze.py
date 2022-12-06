@@ -52,9 +52,23 @@ def ch_game_flag(event): #ゲームの進行を管理する関数
     key = event.keysym
     if game_flag == False and key == "s":
         game_flag = True
+        time_count() #タイマーの開始
     if key == "f":
         game_flag = False
+        time_count()#タイマーの停止
 
+def time_count():
+    global sec, ms, jid
+    if game_flag == True:
+        ms += 1
+        if ms == 10:
+            ms = 0
+            sec += 1
+        jid = root.after(100, time_count)
+    if game_flag == False:
+        root.after_cancel(jid)
+    label["text"] = f"{sec}.{ms}"
+    label.pack()
 
 if __name__ == "__main__":
     game_flag = False
@@ -74,5 +88,9 @@ if __name__ == "__main__":
     root.bind("<KeyPress>", ch_game_flag)
     root.bind("<KeyRelease>", key_up)
     root.after(100, main_proc)
+    label = tk.Label(root, font=("", 80))
+    sec, ms = 0, 0
+    label["text"] = f"{sec}.{ms}"
+    label.pack()
 
     root.mainloop()
