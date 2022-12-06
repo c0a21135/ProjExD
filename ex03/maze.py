@@ -1,4 +1,5 @@
 import tkinter as tk
+import maze_maker as mm
 
 def key_down(event):
     global key
@@ -9,29 +10,36 @@ def key_up(event):
     key = ""
 
 def main_proc():
-    global cx, cy
+    global mx, my, cx, cy
     if key == "Up":
-        cy -= 20
+        my -= 1
     if key == "Down":
-        cy += 20
+        my += 1
     if key == "Left":
-        cx -= 20
+        mx -= 1
     if key == "Right":
-        cx += 20
+        mx += 1
+    cx, cy = mx*100+50, my*100+50
     canvas.coords("kokaton", cx, cy)
     root.after(100, main_proc)
 
-root = tk.Tk()
-root.title("迷えるこうかとん")
-canvas = tk.Canvas(width=1500, height=900, bg="black")
-image = tk.PhotoImage(file="8.png")
-cx = 300
-cy = 400
-canvas.create_image(cx, cy, image=image, tag="kokaton")
-canvas.pack()
-key = ""
-root.bind("<KeyPress>", key_down)
-root.after(100, main_proc)
-root.bind("<KeyRelease>", key_up)
 
-root.mainloop()
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    root.title("迷えるこうかとん")
+    canvas = tk.Canvas(width=1500, height=900, bg="black")
+    image = tk.PhotoImage(file="8.png")
+    mx, my = 1, 1
+    cx, cy = mx*100+50, my*100+50
+    canvas.pack()
+    maze_list = mm.make_maze(15, 9)
+    mm.show_maze(canvas, maze_list)
+    canvas.create_image(cx, cy, image=image, tag="kokaton")
+
+    key = ""
+    root.bind("<KeyPress>", key_down)
+    root.bind("<KeyRelease>", key_up)
+    root.after(100, main_proc)
+
+    root.mainloop()
