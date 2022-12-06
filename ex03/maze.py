@@ -8,5 +8,6 @@ cx = 300
 cy = 400
 canvas.create_image(cx, cy, image=image)
 canvas.pack()
+key = ""
 
 root.mainloop()
