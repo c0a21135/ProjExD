@@ -11,7 +11,7 @@ def key_up(event):
 
 def main_proc():
     global mx, my, cx, cy, image
-    if game_flag == True: #ゲーム実施中のみ移動ができる
+    if game_flag: #ゲーム実施中のみ移動ができる
         if key == "Up":
             if maze_list[mx][my-1] != 1: #移動先が壁ではない(移動可能な)場合は座標の変更と画像の差し替え
                 my -= 1
@@ -63,13 +63,13 @@ def ch_game_flag(event): #ゲームの進行を管理する関数
 
 def time_count(): #時間の計測と表示
     global sec, ms, jid
-    if game_flag == True:
+    if game_flag:
         ms += 1
         if ms == 10:
             ms = 0
             sec += 1
         jid = root.after(100, time_count)
-    if game_flag == False:
+    else:
         root.after_cancel(jid)
     label["text"] = f"{sec}.{ms}"
     label.pack()
