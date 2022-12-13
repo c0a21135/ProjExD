@@ -49,11 +49,18 @@ def main():
 
     while True:
         scrn_sfc.blit(pgbg_sfc, pgbg_rct)
+        scrn_sfc.blit(tori_sfc, tori_rct)
+        scrn_sfc.blit(bomb_sfc, bomb_rct)
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 return
-        if game_flag:
-            key_dict = pg.key.get_pressed() #こうかとんの移動
+            key_dict = pg.key.get_pressed()
+
+            # ゲームの開始
+            if key_dict[pg.K_s]: game_flag = True
+
+        if game_flag: #ゲーム中のみこうかとんと爆弾が動く
+            # こうかとんの移動
             if key_dict[pg.K_UP]: tori_rct.centery -= 1
             if key_dict[pg.K_DOWN]: tori_rct.centery += 1
             if key_dict[pg.K_LEFT]: tori_rct.centerx -= 1
@@ -91,7 +98,7 @@ def main():
 if __name__ == "__main__":
     pg.init()
     count = 0 #爆弾生成数カウント変数
-    game_flag = True
+    game_flag = False
     main()
     pg.quit()
     sys.exit()
