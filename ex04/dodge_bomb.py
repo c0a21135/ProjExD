@@ -150,11 +150,13 @@ def main():
             if ch_b1 != True:
                 vx += 1
                 vy += 0.5
+            ch_b1 = True
 
         if tori_rct.colliderect(b2obj_rct):
             if ch_b2 != True:
                 vx += 0.5
                 vy += 1
+            ch_b2 = True
 
         pg.display.update()
 
