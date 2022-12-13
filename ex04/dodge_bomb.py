@@ -55,12 +55,16 @@ def main():
 
         scrn_sfc.blit(tori_sfc, tori_rct)
 
-        #爆弾の移動
+        # 爆弾の移動
         yoko, tate = check_bound(bomb_rct, scrn_rct)
         vx *= yoko
         vy *= tate
         bomb_rct.move_ip(vx, vy)
         scrn_sfc.blit(bomb_sfc, bomb_rct)
+
+        # 衝突ゲームオーバー判定
+        if tori_rct.colliderect(bomb_rct):
+            return
 
         pg.display.update()
 
