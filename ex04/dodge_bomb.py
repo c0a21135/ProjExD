@@ -22,7 +22,7 @@ def create_bomb(scrn_rct):
     bomb_rct = bomb_sfc.get_rect()
     bomb_rct.centerx = random.randint(0, scrn_rct.width)
     bomb_rct.centery = random.randint(0, scrn_rct.height)
-    vx, vy = 1, 1
+    vx, vy = 3, 3
     bomb_list.append([bomb_sfc, bomb_rct, vx, vy])
 
 
@@ -51,9 +51,11 @@ def main():
     bomb_rct.centerx = random.randint(0, scrn_rct.width)
     bomb_rct.centery = random.randint(0, scrn_rct.height)
     scrn_sfc.blit(bomb_sfc, bomb_rct)
-    vx, vy = +1, +1
-    ch_b1 = False
-    ch_b2 = False
+
+    vx, vy = +1, +1 #爆弾の移動速度
+    ch_b1 = False #爆弾強化オブジェクトの判定フラッグ
+    ch_b2 = False #爆弾強化オブジェクトの判定フラッグ
+    mv = 1 #こうかとんの移動速度
 
     obj_sfc = pg.Surface((80, 80)) #オブジェクト
     obj_sfc.set_colorkey((0, 0, 0))
@@ -79,8 +81,6 @@ def main():
     b2obj_rct.centery = random.randint(0, scrn_rct.height)
     scrn_sfc.blit(b2obj_sfc, b2obj_rct)
 
-
-    mv = 1
 
     while True:
         scrn_sfc.blit(pgbg_sfc, pgbg_rct)
@@ -137,28 +137,28 @@ def main():
         # 衝突ゲームオーバー判定
         if tori_rct.colliderect(bomb_rct):
             game_flag = False
-            tori_sfc = pg.image.load("fg/3.png") #鳥作成
+            tori_sfc = pg.image.load("fg/8.png") #鳥作成
             tori_sfc = pg.transform.rotozoom(tori_sfc, 0, 2.0)
             scrn_sfc.blit(tori_sfc, tori_rct)
             scrn_sfc.blit(bomb_sfc, bomb_rct)
 
         # 強化スポット衝突判定
         if tori_rct.colliderect(obj_rct):
-            mv = 3
+            mv = 3 #移動速度を1->3に変更
 
+        # 爆弾強化オブジェクト衝突判定(一度のみ)
         if tori_rct.colliderect(b1obj_rct):
-            if ch_b1 != True:
+            if ch_b1 != True: #一度のみ移動量を増やす
                 vx += 1.5
                 vy += 2.5
                 create_bomb(scrn_rct)
-            ch_b1 = True
-
+                ch_b1 = True
         if tori_rct.colliderect(b2obj_rct):
-            if ch_b2 != True:
+            if ch_b2 != True: #一度のみ移動量を増やす
                 vx += 2.5
                 vy += 1.5
                 create_bomb(scrn_rct)
-            ch_b2 = True
+                ch_b2 = True
 
         pg.display.update()
 
@@ -167,7 +167,6 @@ def main():
 if __name__ == "__main__":
     pg.init()
     bomb_list = []
-    count = 0 #爆弾生成数カウント変数
     game_flag = False
     main()
     pg.quit()
