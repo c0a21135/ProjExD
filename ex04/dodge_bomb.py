@@ -15,11 +15,16 @@ def check_bound(obj_rct, scrn_rct): #移動するオブジェクトとスクリ�
 # def create_bomb(scrn_rct):
 #     # 爆弾を生成する関数
 #     # 引数：生成するスクリーンレクト
+#     global bomb_list
 #     bomb_sfc = pg.Surface((20, 20)) #爆弾生成
 #     bomb_sfc.set_colorkey((0, 0, 0))
 #     pg.draw.circle(bomb_sfc, (255, 0, 0), (10, 10), 10)
 #     bomb_rct = bomb_sfc.get_rect()
-#     return bomb_sfc, bomb_rct
+#     bomb_rct.centerx = random.randint(0, scrn_rct.width)
+#     bomb_rct.centery = random.randint(0, scrn_rct.height)
+#     vx, vy = 1, 1
+#     bomb_list.append((bomb_sfc, bomb_rct, vx, vy))
+
 
 def main():
     global game_flag
@@ -40,17 +45,38 @@ def main():
 
     bomb_sfc = pg.Surface((20, 20)) #爆弾生成
     bomb_sfc.set_colorkey((0, 0, 0))
-    pg.draw.circle(bomb_sfc, (255, 0, 0), (10, 10), 10)
+    r = 10 #爆弾半径
+    pg.draw.circle(bomb_sfc, (255, 0, 0), (r, r), r)
     bomb_rct = bomb_sfc.get_rect()
     bomb_rct.centerx = random.randint(0, scrn_rct.width)
     bomb_rct.centery = random.randint(0, scrn_rct.height)
     scrn_sfc.blit(bomb_sfc, bomb_rct)
     vx, vy = +1, +1
 
+    obj_sfc = pg.Surface((80, 80)) #オブジェクト
+    obj_sfc.set_colorkey((0, 0, 0))
+    pg.draw.circle(obj_sfc, (255, 255, 0), (40, 40), 80)
+    obj_rct = obj_sfc.get_rect()
+    obj_rct.centerx = random.randint(0, scrn_rct.width)
+    obj_rct.centery = random.randint(0, scrn_rct.height)
+    scrn_sfc.blit(obj_sfc, obj_rct)
+    mv = 1
+
     while True:
         scrn_sfc.blit(pgbg_sfc, pgbg_rct)
         scrn_sfc.blit(tori_sfc, tori_rct)
         scrn_sfc.blit(bomb_sfc, bomb_rct)
+        scrn_sfc.blit(obj_sfc, obj_rct)
+
+        # for bomb_obj in bomb_list:
+        #     scrn_sfc.blit(bomb_obj[0], bomb_obj[1])
+        #     yoko, tate = check_bound(bomb_obj[1], scrn_rct)
+        #     bomb_obj[2] *= yoko
+        #     bomb_obj[3] *= tate
+        #     bomb_obj[1].move_ip(bomb_obj[2], bomb_obj[3])
+        #     scrn_sfc.blit(bomb_obj[0], bomb_obj[1])
+
+
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 return
@@ -58,23 +84,26 @@ def main():
 
             # ゲームの開始
             if key_dict[pg.K_s]: game_flag = True
-
+    
         if game_flag: #ゲーム中のみこうかとんと爆弾が動く
             # こうかとんの移動
-            if key_dict[pg.K_UP]: tori_rct.centery -= 1
-            if key_dict[pg.K_DOWN]: tori_rct.centery += 1
-            if key_dict[pg.K_LEFT]: tori_rct.centerx -= 1
-            if key_dict[pg.K_RIGHT]: tori_rct.centerx += 1
+            if key_dict[pg.K_UP]: tori_rct.centery -= mv
+            if key_dict[pg.K_DOWN]: tori_rct.centery += mv
+            if key_dict[pg.K_LEFT]: tori_rct.centerx -= mv
+            if key_dict[pg.K_RIGHT]: tori_rct.centerx += mv
             if check_bound(tori_rct, scrn_rct) != (1, 1): #こうかとんがスクリーン外に出ようとしたら移動をキャンセル
-                if key_dict[pg.K_UP]: tori_rct.centery += 1
-                if key_dict[pg.K_DOWN]: tori_rct.centery -= 1
-                if key_dict[pg.K_LEFT]: tori_rct.centerx += 1
-                if key_dict[pg.K_RIGHT]: tori_rct.centerx -= 1
+                if key_dict[pg.K_UP]: tori_rct.centery += mv
+                if key_dict[pg.K_DOWN]: tori_rct.centery -= mv
+                if key_dict[pg.K_LEFT]: tori_rct.centerx += mv
+                if key_dict[pg.K_RIGHT]: tori_rct.centerx -= mv
 
             scrn_sfc.blit(tori_sfc, tori_rct)
 
-            # if key_dict[pg.K_SPACE]:
-            #     bomb_sfc, bomb_rct = create_bomb(scrn_rct)
+            # if key_dict[pg.K_SPACE]: # 爆弾生成
+            #     create_bomb(scrn_rct)
+            #     bomb_rct1.centerx = random.randint(0, scrn_rct.width)
+            #     bomb_rct1.centery = random.randint(0, scrn_rct.height)
+            #     scrn_sfc.blit(bomb_sfc1, bomb_rct1)
 
             # 爆弾の移動
             yoko, tate = check_bound(bomb_rct, scrn_rct)
@@ -91,12 +120,15 @@ def main():
             scrn_sfc.blit(tori_sfc, tori_rct)
             scrn_sfc.blit(bomb_sfc, bomb_rct)
 
+        if tori_rct.colliderect(obj_rct):
+            mv = 3
         pg.display.update()
 
         clock.tick(1000)
 
 if __name__ == "__main__":
     pg.init()
+    # bomb_list = []
     count = 0 #爆弾生成数カウント変数
     game_flag = False
     main()
