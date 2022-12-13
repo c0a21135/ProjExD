@@ -12,18 +12,18 @@ def check_bound(obj_rct, scrn_rct): #移動するオブジェクトとスクリ�
         tate = -1
     return yoko, tate
 
-# def create_bomb(scrn_rct):
-#     # 爆弾を生成する関数
-#     # 引数：生成するスクリーンレクト
-#     global bomb_list
-#     bomb_sfc = pg.Surface((20, 20)) #爆弾生成
-#     bomb_sfc.set_colorkey((0, 0, 0))
-#     pg.draw.circle(bomb_sfc, (255, 0, 0), (10, 10), 10)
-#     bomb_rct = bomb_sfc.get_rect()
-#     bomb_rct.centerx = random.randint(0, scrn_rct.width)
-#     bomb_rct.centery = random.randint(0, scrn_rct.height)
-#     vx, vy = 1, 1
-#     bomb_list.append((bomb_sfc, bomb_rct, vx, vy))
+def create_bomb(scrn_rct):
+    # 爆弾を生成する関数
+    # 引数：生成するスクリーンレクト
+    global bomb_list
+    bomb_sfc = pg.Surface((20, 20)) #爆弾生成
+    bomb_sfc.set_colorkey((0, 0, 0))
+    pg.draw.circle(bomb_sfc, (255, 0, 0), (10, 10), 10)
+    bomb_rct = bomb_sfc.get_rect()
+    bomb_rct.centerx = random.randint(0, scrn_rct.width)
+    bomb_rct.centery = random.randint(0, scrn_rct.height)
+    vx, vy = 1, 1
+    bomb_list.append([bomb_sfc, bomb_rct, vx, vy])
 
 
 def main():
@@ -90,13 +90,13 @@ def main():
         scrn_sfc.blit(b1obj_sfc, b1obj_rct)
         scrn_sfc.blit(b2obj_sfc, b2obj_rct)
 
-        # for bomb_obj in bomb_list:
-        #     scrn_sfc.blit(bomb_obj[0], bomb_obj[1])
-        #     yoko, tate = check_bound(bomb_obj[1], scrn_rct)
-        #     bomb_obj[2] *= yoko
-        #     bomb_obj[3] *= tate
-        #     bomb_obj[1].move_ip(bomb_obj[2], bomb_obj[3])
-        #     scrn_sfc.blit(bomb_obj[0], bomb_obj[1])
+        for bomb_obj in bomb_list:
+            scrn_sfc.blit(bomb_obj[0], bomb_obj[1])
+            yoko, tate = check_bound(bomb_obj[1], scrn_rct)
+            bomb_obj[2] *= yoko
+            bomb_obj[3] *= tate
+            bomb_obj[1].move_ip(bomb_obj[2], bomb_obj[3])
+            scrn_sfc.blit(bomb_obj[0], bomb_obj[1])
 
 
         for event in pg.event.get():
@@ -148,14 +148,16 @@ def main():
 
         if tori_rct.colliderect(b1obj_rct):
             if ch_b1 != True:
-                vx += 1
-                vy += 0.5
+                vx += 1.5
+                vy += 2.5
+                create_bomb(scrn_rct)
             ch_b1 = True
 
         if tori_rct.colliderect(b2obj_rct):
             if ch_b2 != True:
-                vx += 0.5
-                vy += 1
+                vx += 2.5
+                vy += 1.5
+                create_bomb(scrn_rct)
             ch_b2 = True
 
         pg.display.update()
@@ -164,7 +166,7 @@ def main():
 
 if __name__ == "__main__":
     pg.init()
-    # bomb_list = []
+    bomb_list = []
     count = 0 #爆弾生成数カウント変数
     game_flag = False
     main()
