@@ -52,6 +52,8 @@ def main():
     bomb_rct.centery = random.randint(0, scrn_rct.height)
     scrn_sfc.blit(bomb_sfc, bomb_rct)
     vx, vy = +1, +1
+    ch_b1 = False
+    ch_b2 = False
 
     obj_sfc = pg.Surface((80, 80)) #オブジェクト
     obj_sfc.set_colorkey((0, 0, 0))
@@ -60,6 +62,24 @@ def main():
     obj_rct.centerx = random.randint(0, scrn_rct.width)
     obj_rct.centery = random.randint(0, scrn_rct.height)
     scrn_sfc.blit(obj_sfc, obj_rct)
+
+    b1obj_sfc = pg.Surface((150, 150)) #オブジェクト
+    b1obj_sfc.set_colorkey((0, 0, 0))
+    pg.draw.circle(b1obj_sfc, (255, 0, 0), (75, 75), 150)
+    b1obj_rct = b1obj_sfc.get_rect()
+    b1obj_rct.centerx = random.randint(0, scrn_rct.width)
+    b1obj_rct.centery = random.randint(0, scrn_rct.height)
+    scrn_sfc.blit(b1obj_sfc, b1obj_rct)
+
+    b2obj_sfc = pg.Surface((150, 150)) #オブジェクト
+    b2obj_sfc.set_colorkey((0, 0, 0))
+    pg.draw.circle(b2obj_sfc, (255, 0, 0), (75, 75), 150)
+    b2obj_rct = b2obj_sfc.get_rect()
+    b2obj_rct.centerx = random.randint(0, scrn_rct.width)
+    b2obj_rct.centery = random.randint(0, scrn_rct.height)
+    scrn_sfc.blit(b2obj_sfc, b2obj_rct)
+
+
     mv = 1
 
     while True:
@@ -67,6 +87,8 @@ def main():
         scrn_sfc.blit(tori_sfc, tori_rct)
         scrn_sfc.blit(bomb_sfc, bomb_rct)
         scrn_sfc.blit(obj_sfc, obj_rct)
+        scrn_sfc.blit(b1obj_sfc, b1obj_rct)
+        scrn_sfc.blit(b2obj_sfc, b2obj_rct)
 
         # for bomb_obj in bomb_list:
         #     scrn_sfc.blit(bomb_obj[0], bomb_obj[1])
@@ -120,8 +142,20 @@ def main():
             scrn_sfc.blit(tori_sfc, tori_rct)
             scrn_sfc.blit(bomb_sfc, bomb_rct)
 
+        # 強化スポット衝突判定
         if tori_rct.colliderect(obj_rct):
             mv = 3
+
+        if tori_rct.colliderect(b1obj_rct):
+            if ch_b1 != True:
+                vx += 1
+                vy += 0.5
+
+        if tori_rct.colliderect(b2obj_rct):
+            if ch_b2 != True:
+                vx += 0.5
+                vy += 1
+
         pg.display.update()
 
         clock.tick(1000)
