@@ -31,13 +31,15 @@ def main():
             if event.type == pg.QUIT:
                 return
 
-        key_dict = pg.key.get_pressed()
+        key_dict = pg.key.get_pressed() #こうかとんの移動
         if key_dict[pg.K_UP]: tori_rct.centery -= 1
         if key_dict[pg.K_DOWN]: tori_rct.centery += 1
         if key_dict[pg.K_LEFT]: tori_rct.centerx -= 1
         if key_dict[pg.K_RIGHT]: tori_rct.centerx += 1
         scrn_sfc.blit(tori_sfc, tori_rct)
 
+        vx, vy = +1, +1 #爆弾の移動
+        bomb_rct.move_ip(vx, vy)
         scrn_sfc.blit(bomb_sfc, bomb_rct)
 
         pg.display.update()
