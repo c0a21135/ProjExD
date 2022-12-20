@@ -5,10 +5,12 @@ import schedule
 
 import pygame as pg
 
+
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 bombs = []#爆弾のリスト
 del_bombs = []
 game_flag = False
+
 
 class Screen:
     def __init__(self, title, wh, img_path):
@@ -91,7 +93,7 @@ class Bomb:
         self.blit(scr)
 
 
-class Del_bomb:
+class Del_bomb: #爆弾モドキクラス
     def __init__(self, color, rad, vxy, scr:Screen):
         self.sfc = pg.Surface((2*rad, 2*rad))
         self.sfc.set_colorkey((0, 0, 0))
@@ -112,7 +114,7 @@ class Del_bomb:
         self.blit(scr)
 
 
-class Shugosin:
+class Shugosin: #守護神クラス
     def __init__(self, img_pass, ratio, bird:Bird):
         self.sfc = pg.image.load(img_pass)  #"fg/6.png"
         self.sfc = pg.transform.rotozoom(self.sfc, 0, ratio)
@@ -191,7 +193,7 @@ def gard_bombs(bomb:Bomb):
 
 
 def main():
-    global bombs, game_flag
+    global game_flag
 
     clock =pg.time.Clock()
     screen = Screen("逃げろこうかとん", (1600, 900), "fg/pg_bg.jpg")
@@ -207,8 +209,6 @@ def main():
         music = os.path.join(main_dir, "data", "house_lo.wav")
         pg.mixer.music.load(music)
         pg.mixer.music.play(-1)
-
-    # Shot.images =  [load_image("shot.gif")] #弾の画像
     
     schedule.every(2).seconds.do(create_bombs,screen) #2秒ごとに爆弾生成関数を実行するようにスケジュールに登録
     boom_sound = load_sound("boom.wav")
@@ -233,6 +233,7 @@ def main():
                 shugo.blit()
                 if shugo.rct.colliderect(bomb.rct):
                     gard_bombs(bomb)
+
         if game_flag:
             bird.update(screen) #こうかとんを移動する
 
