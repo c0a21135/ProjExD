@@ -143,10 +143,11 @@ def create_bombs(scr:Screen): #爆弾生成
 
 def create_delbombs(scr:Screen):
     global del_bombs
-    vx=random.choice([-4, -5, +4, +3])
-    vy=random.choice([-4, -5, +4, +3])
-    bomb = Bomb((255, 255, 0), 10, (vx, vy), scr)
-    del_bombs.append(bomb)
+    if len(del_bombs) < 2:
+        vx=random.choice([-1.5, -1, +1.5, +1])
+        vy=random.choice([-1.5, -1, +1.5, +1])
+        bomb = Bomb((255, 255, 0), 10, (vx, vy), scr)
+        del_bombs.append(bomb)
 
 
 def check_bound(obj_rct, scr_rct):
@@ -196,16 +197,12 @@ def main():
     global bombs
 
     clock =pg.time.Clock()
-
     screen = Screen("逃げろこうかとん", (1600, 900), "fg/pg_bg.jpg")
     bird = Bird("fg/6.png", 2.0, (900, 400))
 
     #初期爆弾の生成
     for i in range(4):
         create_bombs(screen)
-
-    for i in range(2):
-        create_delbombs(screen)
     
     #BGMの設定
     if pg.mixer:
@@ -225,7 +222,10 @@ def main():
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 return
-        
+            if event.type == pg.KEYDOWN:
+                if event.type == pg.K_SPACE:
+                    create_delbombs(screen)
+
         bird.update(screen) #こうかとんを移動する
 
         for bomb in bombs:
@@ -240,7 +240,8 @@ def main():
                 reset_bombs(delbomb) #爆弾処理オブジェクトに触れた際出現中の爆弾を無くす
 
         keystate = pg.key.get_pressed()#押下したキーの取得
-
+        if keystate[pg.K_SPACE]:
+            create_delbombs(screen)
 
         pg.display.update()
         clock.tick(1000)
