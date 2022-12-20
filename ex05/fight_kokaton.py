@@ -215,7 +215,8 @@ def main():
 
     # Shot.images =  [load_image("shot.gif")] #弾の画像
     
-    schedule.every(3).seconds.do(create_bombs,screen) #3秒ごとに爆弾生成関数を実行するようにスケジュールに登録
+    schedule.every(2).seconds.do(create_bombs,screen) #3秒ごとに爆弾生成関数を実行するようにスケジュールに登録
+    boom_sound = load_sound("boom.wav")
 
     while True:
         screen.blit() #背景画像の貼り付け
@@ -235,6 +236,7 @@ def main():
         for delbomb in del_bombs:
             delbomb.update(screen)
             if delbomb.rct.colliderect(bird.rct):
+                boom_sound.play()
                 reset_bombs(delbomb) #爆弾処理オブジェクトに触れた際出現中の爆弾を無くす
 
         keystate = pg.key.get_pressed()#押下したキーの取得
