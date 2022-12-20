@@ -1,10 +1,9 @@
-import pygame as pg
 import random
 import sys
 import os
-import time
 import schedule
 
+import pygame as pg
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 bombs = []#爆弾のリスト
