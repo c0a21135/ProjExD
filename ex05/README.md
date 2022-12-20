@@ -31,7 +31,10 @@
 * Del_bombクラス：爆弾モドキを格納するクラス
 * Shugosinクラス：守護神を格納するクラス
 * createbomb()：爆弾を生成する関数。呼び出した数だけ爆弾が生成される。
-* create_delbombs():
+* create_delbombs():爆弾モドキを生成する関数。
 * bombs:爆弾を収納するリスト
 * del_bombs:爆弾モドキを収納するリスト
-* 
+* load_sound():音楽をロードする関数
+* load_image():画像をロードする関数
+* reset_bombs():爆弾を全消去する関数
+* gard_bombs():任意の爆弾を消去する関数
