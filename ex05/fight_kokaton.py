@@ -9,7 +9,7 @@ import schedule
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 bombs = []#爆弾のリスト
 del_bombs = []
-
+game_flag = False
 
 class Screen:
     def __init__(self, title, wh, img_path):
@@ -112,25 +112,18 @@ class Del_bomb:
         self.vy *= tate
         self.blit(scr)
 
-class Shot(pg.sprite.Sprite):
-    """a bullet the Player sprite fires."""
 
-    speed = -4
-    images = []
+class Shugosin:
+    def __init__(self, img_pass, ratio, bird:Bird):
+        self.sfc = pg.image.load(img_pass)  #"fg/6.png"
+        self.sfc = pg.transform.rotozoom(self.sfc, 0, ratio)
+        self.rct = self.sfc.get_rect()
+        self.rct.center = bird.rct.centerx, bird.rct.centery
 
-    def __init__(self, pos):
-        pg.sprite.Sprite.__init__(self, self.containers)
-        self.image = self.images[0]
-        self.rect = self.image.get_rect(midbottom=pos)
+    def blit(self, scr:Screen):
+        scr.sfc.blit(self.sfc, self.rct)
+  
 
-    def update(self):
-        """called every time around the game loop.
-
-        Every tick we move the shot upwards.
-        """
-        self.rect.move_ip(0, self.speed)
-        if self.rect.top <= 0:
-            self.kill()
 
 
 def create_bombs(scr:Screen): #爆弾生成
@@ -193,12 +186,18 @@ def reset_bombs(delbom:Del_bomb):
     del_bombs.remove(delbom)
 
 
-def main():
+def gard_bombs(bomb:Bomb):
     global bombs
+    bombs.remove(bomb)
+
+
+def main():
+    global bombs, game_flag
 
     clock =pg.time.Clock()
     screen = Screen("逃げろこうかとん", (1600, 900), "fg/pg_bg.jpg")
     bird = Bird("fg/6.png", 2.0, (900, 400))
+    shugo = Shugosin("ex05/data/alien3.png", 5.0, bird)
 
     #初期爆弾の生成
     for i in range(4):
@@ -212,36 +211,46 @@ def main():
 
     # Shot.images =  [load_image("shot.gif")] #弾の画像
     
-    schedule.every(2).seconds.do(create_bombs,screen) #3秒ごとに爆弾生成関数を実行するようにスケジュールに登録
+    schedule.every(2).seconds.do(create_bombs,screen) #2秒ごとに爆弾生成関数を実行するようにスケジュールに登録
     boom_sound = load_sound("boom.wav")
+    screen.blit()
+    bird.blit(screen)
 
     while True:
         screen.blit() #背景画像の貼り付け
+        bird.blit(screen)
         schedule.run_pending() #スケジュールの実行
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 return
-            if event.type == pg.KEYDOWN:
-                if event.type == pg.K_SPACE:
-                    create_delbombs(screen)
+            key_dict = pg.key.get_pressed()
+            # ゲームの開始
+            if key_dict[pg.K_s]:
+                game_flag = True
+            if event.type == pg.K_SPACE:
+                create_delbombs(screen)
+            if event.type == pg.K_a:
+                shugo.blit()
+                if shugo.rct.colliderect(bomb.rct):
+                    gard_bombs(bomb)
+        if game_flag:
+            bird.update(screen) #こうかとんを移動する
 
-        bird.update(screen) #こうかとんを移動する
+            for bomb in bombs:
+                bomb.update(screen)
+                if bird.rct.colliderect(bomb.rct):
+                    game_flag = False
+                    bird = Bird("fg/8.png", 2.0, (900, 400))
 
-        for bomb in bombs:
-            bomb.update(screen)
-            if bird.rct.colliderect(bomb.rct):
-                return
+            for delbomb in del_bombs:
+                delbomb.update(screen)
+                if delbomb.rct.colliderect(bird.rct):
+                    boom_sound.play()
+                    reset_bombs(delbomb) #爆弾処理オブジェクトに触れた際出現中の爆弾を無くす
 
-        for delbomb in del_bombs:
-            delbomb.update(screen)
-            if delbomb.rct.colliderect(bird.rct):
-                boom_sound.play()
-                reset_bombs(delbomb) #爆弾処理オブジェクトに触れた際出現中の爆弾を無くす
-
-        keystate = pg.key.get_pressed()#押下したキーの取得
-        if keystate[pg.K_SPACE]:
-            create_delbombs(screen)
+            if key_dict[pg.K_SPACE]:
+                create_delbombs(screen)
 
         pg.display.update()
         clock.tick(1000)
