@@ -8,6 +8,7 @@ import schedule
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 bombs = []#爆弾のリスト
+del_bombs = []
 
 
 class Screen:
@@ -91,6 +92,26 @@ class Bomb:
         self.blit(scr)
 
 
+class Del_bomb:
+    def __init__(self, color, rad, vxy, scr:Screen):
+        self.sfc = pg.Surface((2*rad, 2*rad))
+        self.sfc.set_colorkey((0, 0, 0))
+        pg.draw.circle(self.sfc, color, (rad, rad), rad)
+        self.rct = self.sfc.get_rect()
+        self.rct.centerx = random.randint(0+rad, scr.rct.width-rad)
+        self.rct.centery = random.randint(0+rad, scr.rct.height-rad)
+        self.vx, self.vy = vxy
+
+    def blit(self, scr:Screen):
+        scr.sfc.blit(self.sfc, self.rct)
+
+    def update(self, scr:Screen):
+        self.rct.move_ip(self.vx, self.vy)
+        yoko, tate = check_bound(self.rct, scr.rct)
+        self.vx *= yoko
+        self.vy *= tate
+        self.blit(scr)
+
 class Shot(pg.sprite.Sprite):
     """a bullet the Player sprite fires."""
 
@@ -112,12 +133,20 @@ class Shot(pg.sprite.Sprite):
             self.kill()
 
 
-def create_bombs(scr:Screen):
+def create_bombs(scr:Screen): #爆弾生成
     global bombs
     vx=random.choice([-2, -1, +1, +2])
     vy=random.choice([-2, -1, +1, +2])
     bomb = Bomb((255, 0, 0), 10, (vx, vy), scr)
     bombs.append(bomb)
+
+
+def create_delbombs(scr:Screen):
+    global del_bombs
+    vx=random.choice([-4, -5, +4, +3])
+    vy=random.choice([-4, -5, +4, +3])
+    bomb = Bomb((255, 255, 0), 10, (vx, vy), scr)
+    del_bombs.append(bomb)
 
 
 def check_bound(obj_rct, scr_rct):
@@ -157,6 +186,12 @@ def load_image(file):
     return surface.convert() 
 
 
+def reset_bombs(delbom:Del_bomb):
+    global bombs, del_bombs
+    bombs.clear()
+    del_bombs.remove(delbom)
+
+
 def main():
     global bombs
 
@@ -168,6 +203,9 @@ def main():
     #初期爆弾の生成
     for i in range(4):
         create_bombs(screen)
+
+    for i in range(2):
+        create_delbombs(screen)
     
     #BGMの設定
     if pg.mixer:
@@ -177,11 +215,10 @@ def main():
 
     # Shot.images =  [load_image("shot.gif")] #弾の画像
     
-    schedule.every(10).seconds.do(create_bombs,screen) #爆弾生成関数をスケジュールに登録
+    schedule.every(3).seconds.do(create_bombs,screen) #3秒ごとに爆弾生成関数を実行するようにスケジュールに登録
 
     while True:
         screen.blit() #背景画像の貼り付け
-
         schedule.run_pending() #スケジュールの実行
 
         for event in pg.event.get():
@@ -194,6 +231,11 @@ def main():
             bomb.update(screen)
             if bird.rct.colliderect(bomb.rct):
                 return
+
+        for delbomb in del_bombs:
+            delbomb.update(screen)
+            if delbomb.rct.colliderect(bird.rct):
+                reset_bombs(delbomb) #爆弾処理オブジェクトに触れた際出現中の爆弾を無くす
 
         keystate = pg.key.get_pressed()#押下したキーの取得
 
